@@ -76,7 +76,7 @@ export default ( Splide, Components ) => {
 			position *= this.sign;
 
 			if ( Splide.is( SLIDE ) ) {
-				position = between( position, Layout.totalWidth( Elements.total ), 0 );
+				position = between( position, Layout.totalWidth( Elements.total, true ), 0 );
 			}
 
 			const Slides = Elements.getSlides( true );
@@ -103,7 +103,7 @@ export default ( Splide, Components ) => {
 		 * @return {number} - Trimmed position.
 		 */
 		trim( position ) {
-			const edge = this.sign * ( Layout.totalWidth( Elements.total ) - ( Layout.width + Layout.gap ) );
+			const edge = this.sign * ( Layout.totalWidth( Elements.total, true ) - ( Layout.width + Layout.gap ) );
 			return between( position, edge, 0 );
 		},
 

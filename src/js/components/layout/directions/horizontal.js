@@ -6,7 +6,7 @@
  */
 
 import { applyStyle } from "../../../utils/dom";
-import { unit, toPixel } from "../../../utils/utils";
+import {unit, toPixel, between} from "../../../utils/utils";
 import { RTL } from '../../../constants/directions';
 
 /**
@@ -100,18 +100,27 @@ export default ( Splide, Components ) => {
 		},
 
 		/**
-		 * Accumulate slide width including the gap to the designated index.
+		 * Calculate the slide position in relation to the list element.
 		 *
 		 * @param {number|undefined} index - If undefined, width of all slides will be accumulated.
+		 * @param {boolean} absIndex - if index is natural index of array
 		 *
-		 * @return {number} - Accumulated width.
+		 * @return {number} - slide position in relation to list element.
 		 */
-		totalWidth( index ) {
-			return Elements.getSlides( true )
-				.filter( Slide => Slide.index <= index )
-				.reduce( ( accumulator, Slide ) => {
-					return accumulator + this.slideWidth( Slide.index ) + this.gap;
-				}, 0 );
+		totalWidth( index, absIndex=false ) {
+			let slide = null;
+			if(absIndex) {
+				const slides = Elements.getSlides(true).sort((s1,s2) => s1.index - s2.index);
+				index = between(index, 0, slides.length-1);
+				slide = slides[index];
+			} else {
+				slide = Elements.getSlide(index);
+			}
+			if(slide) {
+				const slideRect = slide.slide.getBoundingClientRect();
+				return slideRect.left + slideRect.width + this.gap - Elements.list.getBoundingClientRect().left;
+			}
+			return 0;
 		},
 
 		/**
@@ -157,7 +166,7 @@ export default ( Splide, Components ) => {
 		 */
 		get listWidth() {
 			const total = Elements.total;
-			return options.autoWidth ? total * SLIDE_MAX_WIDTH : this.totalWidth( total );
+			return options.autoWidth ? total * SLIDE_MAX_WIDTH : this.totalWidth( total, true );
 		},
 	}
 }

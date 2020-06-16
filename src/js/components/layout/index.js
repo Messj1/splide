@@ -80,7 +80,6 @@ export default ( Splide, Components ) => {
 	 * Resize the list and slides including clones.
 	 */
 	function resize() {
-		applyStyle( Elements.list, { width: unit( Layout.listWidth ), height: unit( Layout.listHeight ) } );
 		applyStyle( Elements.track, { height: unit( Layout.height ) } );
 
 		const slideHeight = unit( Layout.slideHeight() );
@@ -94,6 +93,8 @@ export default ( Splide, Components ) => {
 				height: Slide.container ? null : slideHeight,
 			} );
 		} );
+
+		applyStyle( Elements.list, { width: unit( Layout.listWidth ), height: unit( Layout.listHeight ) } );
 
 		// When the scrollbar is made hidden, the track width is changed but the resize event is not fired.
 		if ( width !== Layout.width ) {

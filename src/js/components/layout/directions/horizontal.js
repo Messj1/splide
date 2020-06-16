@@ -118,7 +118,11 @@ export default ( Splide, Components ) => {
 			}
 			if(slide) {
 				const slideRect = slide.slide.getBoundingClientRect();
-				return slideRect.left + slideRect.width + this.gap - Elements.list.getBoundingClientRect().left;
+				if(options.direction === RTL){
+					return Elements.list.getBoundingClientRect().right - (slideRect.left + this.gap);
+				} else {
+					return slideRect.right + this.gap - Elements.list.getBoundingClientRect().left;
+				}
 			}
 			return 0;
 		},
@@ -166,7 +170,7 @@ export default ( Splide, Components ) => {
 		 */
 		get listWidth() {
 			const total = Elements.total;
-			return options.autoWidth ? total * SLIDE_MAX_WIDTH : this.totalWidth( total, true );
+			return options.autoWidth ? total * SLIDE_MAX_WIDTH : this.totalWidth( total, true ) * (options.direction === RTL? -1: 1);
 		},
 	}
 }
